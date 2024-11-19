@@ -1,6 +1,6 @@
 
 public class Point{
-
+    //test
     private int x; // Coordonnée X
     private int y; // Coordonnée Y
     private char couleurNO; // Couleur pour la région Nord-Ouest

@@ -19,16 +19,25 @@ public class Quadtree{
         this.taille = taille;
         this.couleur = couleur;
         this.enfants = null; // Les feuilles n'ont pas d'enfants
+        this.point = null; //pas de point de division pour une feuille
     }
 
     // Constructeur pour les nœuds non-feuilles
-    public Quadtree(int taille) {
+    public Quadtree(int taille, Point point) {
         this.niveau = 0;
         this.taille = taille;
         this.enfants = new Quadtree[4];
+        this.point = point;
+        this.couleur = '\0'; // Blanc par défaut
     }
 
     //Methodes
+
+
+    //pour vérifier si le nœud est une feuille
+    public boolean estFeuille() {
+        return this.enfants == null;
+    }
 
     /**
      * Recherche la région divisible contenant le point donné.
@@ -69,6 +78,18 @@ public class Quadtree{
         Quadtree region = this.searchQTree(nouveauPoint.getX(), nouveauPoint.getY());
         region.diviser(nouveauPoint);
     }
+
+
+    /**
+     * Divise la région en quatre quadrants et place le point de division.
+     * Complexité : O(1).
+     *
+     * @param nouveauPoint Le point de division.
+     */ 
+    public void Diviser(Point nouveauPoint) {
+
+    }
+
 
     /**
      * Construit le Quadtree en utilisant une liste de points.

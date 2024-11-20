@@ -15,23 +15,35 @@ public class Quadtree{
     private Quadtree[] enfants; // Quatre enfants représentant les quadrants
     
     // Constructeur pour les feuilles
-    public Quadtree(Point pointX,Point pointY char couleur) {
-        this.niveau = 0;
+    public Quadtree(Point pointX,Point pointY, char couleur) {
         this.pointX = pointX;
         this.pointY = pointY;
         this.couleur = couleur;
         this.enfants = null; // Les feuilles n'ont pas d'enfants
+        this.point = null;
     }
 
     // Constructeur pour les nœuds non-feuilles
     public Quadtree(Point pointX,Point pointY) {
-        this.niveau = 0;
         this.pointX = pointX;
         this.pointY = pointY;       
-        this.enfants = new Quadtree[4];
+        this.enfants = null;
+        this.point = null;
+        this.couleur = 'N';
     }
 
     //Methodes
+
+    /**
+     * Vérifie si le nœud est une feuille.
+     *
+     * @return true si le nœud est une feuille, false sinon.
+     */
+    public boolean estFeuille() {
+        return this.enfants == null;
+    }
+
+    
 
     /**
      * Recherche la région divisible contenant le point donné.
@@ -44,6 +56,9 @@ public class Quadtree{
     public Quadtree searchQTree(int px, int py) {
         
         if (this.estFeuille()) {
+            return this;
+        }
+        if (this.point == null) {
             return this;
         }
 
@@ -73,17 +88,24 @@ public class Quadtree{
         region.diviser(nouveauPoint);
     }
 
+    /**
+     * Divise la région en 4 parties en utilisant le point donné pour séparer les 4 sous-régions.
+     * Complexité : O(1)
+     *
+     * @param nouveauPoint Le point qui sépare les 4 sous-régions.
+     */
     public void diviser(Point nouveauPoint){
         this.point = nouveauPoint;
         this.enfants = new Quadtree[4];
-        Point point01 = new Point(this.getpointX().getX(), nouveauPoint.getY());
-        Point point02 = new Point(nouveauPoint.getX(), this.getpointY().getY());
-        Point point21 = new Point(nouveauPoint.getX(), this.getpointX().getY());
-        Point point22 = new Point(this.getpointY().getX(), nouveauPoint.getY());
-        this.enfants[0] = new Quadtree(point01, point02);
-        this.enfants[1] = new Quadtree(this.point, this.pointY);
-        this.enfants[2] = new Quadtree(point21, point22);
-        this.enfants[3] = new Quadtree(this.pointX, this.point);
+        Point point01 = new Point(this.getPointX().getX(), nouveauPoint.getY());
+        Point point02 = new Point(nouveauPoint.getX(), this.getPointY().getY());
+        Point point21 = new Point(nouveauPoint.getX(), this.getPointX().getY());
+        Point point22 = new Point(this.getPointY().getX(), nouveauPoint.getY());
+        
+        this.enfants[0] = new Quadtree(point01, point02, nouveauPoint.getC1());
+        this.enfants[1] = new Quadtree(this.point, this.pointY, nouveauPoint.getC2());
+        this.enfants[2] = new Quadtree(point21, point22, nouveauPoint.getC3());
+        this.enfants[3] = new Quadtree(this.pointX, this.point, nouveauPoint.getC4());
     
     }
 
@@ -215,6 +237,16 @@ public class Quadtree{
                 this.couleur = couleurCommune;
             }
         }
+    }
+
+    //get et set 
+
+    public Point getPointX() {     
+        return this.pointX; 
+    }   
+
+    public Point getPointY() {     
+        return this.pointY; 
     }
 
 }

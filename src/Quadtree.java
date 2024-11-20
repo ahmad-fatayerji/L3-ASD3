@@ -84,7 +84,7 @@ public class Quadtree{
      * @param nouveauPoint Le point à ajouter.
      */
     public void addQTree(Point nouveauPoint) {
-        Quadtree region = this.searchQTree(nouveauPoint.getX(), nouveauPoint.getY());
+        Quadtree region = this.searchQTree((int)nouveauPoint.getX(),(int) nouveauPoint.getY());
         region.diviser(nouveauPoint);
     }
 
@@ -97,10 +97,10 @@ public class Quadtree{
     public void diviser(Point nouveauPoint){
         this.point = nouveauPoint;
         this.enfants = new Quadtree[4];
-        Point point01 = new Point(this.getPointX().getX(), nouveauPoint.getY());
-        Point point02 = new Point(nouveauPoint.getX(), this.getPointY().getY());
-        Point point21 = new Point(nouveauPoint.getX(), this.getPointX().getY());
-        Point point22 = new Point(this.getPointY().getX(), nouveauPoint.getY());
+        Point point01 = new Point((int) this.getPointX().getX(), (int) nouveauPoint.getY());
+        Point point02 = new Point((int)nouveauPoint.getX(),(int) this.getPointY().getY());
+        Point point21 = new Point((int)nouveauPoint.getX(), (int)this.getPointX().getY());
+        Point point22 = new Point((int)this.getPointY().getX(), (int)nouveauPoint.getY());
         
         this.enfants[0] = new Quadtree(point01, point02, nouveauPoint.getC1());
         this.enfants[1] = new Quadtree(this.point, this.pointY, nouveauPoint.getC2());

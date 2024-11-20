@@ -1,45 +1,24 @@
+public class Point {
 
-public class Point{
-    //test
     private int x; // Coordonnée X
     private int y; // Coordonnée Y
-    private char couleurNO; // Couleur pour la région Nord-Ouest
-    private char couleurNE; // Couleur pour la région Nord-Est
-    private char couleurSE; // Couleur pour la région Sud-Est
-    private char couleurSO; // Couleur pour la région Sud-Ouest
+    private char c1, c2, c3, c4; // Couleurs pour les quadrants NO, NE, SE, SO
 
     // Constructeur
-    public Point(int x, int y, char couleurNO, char couleurNE, char couleurSE, char couleurSO) {
+    public Point(int x, int y, char c1, char c2, char c3, char c4) {
         this.x = x;
         this.y = y;
-        this.couleurNO = couleurNO;
-        this.couleurNE = couleurNE;
-        this.couleurSE = couleurSE;
-        this.couleurSO = couleurSO;
+        this.c1 = c1;
+        this.c2 = c2;
+        this.c3 = c3;
+        this.c4 = c4;
     }
 
     // Getters
-    public int getX() {
-        return x;
-    }
-
-    public int getY() {
-        return y;
-    }
-
-    public char getCouleurNO() {
-        return couleurNO;
-    }
-
-    public char getCouleurNE() {
-        return couleurNE;
-    }
-
-    public char getCouleurSE() {
-        return couleurSE;
-    }
-
-    public char getCouleurSO() {
-        return couleurSO;
-    }
+    public int getX() { return x; }
+    public int getY() { return y; }
+    public char getC1() { return c1; }
+    public char getC2() { return c2; }
+    public char getC3() { return c3; }
+    public char getC4() { return c4; }
 }

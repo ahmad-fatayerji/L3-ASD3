@@ -1,252 +1,268 @@
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
-import javax.imageio.ImageIO;
 import java.io.File;
 import java.io.IOException;
-
+import javax.imageio.ImageIO;
 public class Quadtree{
 
-    // Attributs
-    private Point pointX;//point en bas a droite de la region
-    private Point pointY; //point en haut a gauche de la region
-    private Point point; // Point de division pour ce nœud
-    private char couleur; // Couleur de la région (uniquement pour les feuilles)
-    private Quadtree[] enfants; // Quatre enfants représentant les quadrants
-    
-    // Constructeur pour les feuilles
-    public Quadtree(Point pointX,Point pointY, char couleur) {
-        this.pointX = pointX;
-        this.pointY = pointY;
-        this.couleur = couleur;
-        this.enfants = null; // Les feuilles n'ont pas d'enfants
-        this.point = null;
+// Attributes
+private Point bottomLeft;  // Bottom-left corner of the region
+private Point topRight;    // Top-right corner of the region
+private Point divisionPoint; // Division point for internal nodes
+private char color;        // Color of the region (only for leaf nodes)
+private Quadtree[] children; // Four children representing the quadrants
+
+// Constructors
+
+    // Constructor for leaf nodes
+    public Quadtree(Point bottomLeft, Point topRight, char color) {
+        this.bottomLeft = bottomLeft;
+        this.topRight = topRight;
+        this.color = color;
+        this.children = null; 
+        this.divisionPoint = null;
     }
 
-    // Constructeur pour les nœuds non-feuilles
-    public Quadtree(Point pointX,Point pointY) {
-        this.pointX = pointX;
-        this.pointY = pointY;       
-        this.enfants = null;
-        this.point = null;
-        this.couleur = 'N';
+    // Constructor for internal nodes
+    public Quadtree(Point bottomLeft, Point topRight) {
+        this.bottomLeft = bottomLeft;
+        this.topRight = topRight;
+        this.color = '\0'; // No color for internal nodes
+        this.children = null; // Will be initialized upon division
+        this.divisionPoint = null;
     }
 
-    //Methodes
+// Getters
+    public Point getBottomLeft() {
+        return this.bottomLeft;
+    }
 
-    /**
-     * Vérifie si le nœud est une feuille.
-     *
-     * @return true si le nœud est une feuille, false sinon.
-     */
+    public Point getTopRight() {
+        return this.topRight;
+    }
+
+    public Point getDivisionPoint() {
+        return this.divisionPoint;
+    }
+
+    public char getColor() {
+        return this.color;
+    }
+
+    public Quadtree[] getChildren() {
+        return this.children;
+    }
+
+// Setters
+    public void setDivisionPoint(Point divisionPoint) {
+        this.divisionPoint = divisionPoint;
+    }
+
+    public void setColor(char color) {
+        this.color = color;
+    }
+
+//Methods 
+
     public boolean estFeuille() {
-        return this.enfants == null;
+        return this.children == null;
     }
 
+    //Methode Projet
+
+    public void diviser(Point divisionPoint) {
+        if (!this.estFeuille()) {
+            // Node is already divided
+            return;
+        }
     
+        this.divisionPoint = divisionPoint;
+        this.children = new Quadtree[4];
+    
+        int midX = divisionPoint.getX();
+        int midY = divisionPoint.getY();
+    
+        // NW Quadrant (children[0])
+        children[0] = new Quadtree(
+            new Point(this.bottomLeft.getX(), midY),
+            new Point(midX, this.topRight.getY()),
+            divisionPoint.getC1()
+        );
+    
+        // NE Quadrant (children[1])
+        children[1] = new Quadtree(
+            new Point(midX, midY),
+            this.topRight,
+            divisionPoint.getC2()
+        );
+    
+        // SE Quadrant (children[2])
+        children[2] = new Quadtree(
+            divisionPoint,
+            new Point(this.topRight.getX(), midY),
+            divisionPoint.getC3()
+        );
+    
+        // SW Quadrant (children[3])
+        children[3] = new Quadtree(
+            this.bottomLeft,
+            new Point(midX, midY),
+            divisionPoint.getC4()
+        );
+    
+        // After division, this node is no longer a leaf, so reset color
+        this.color = '\0';
+    }
+    
+    //Methode Projet
 
-    /**
-     * Recherche la région divisible contenant le point donné.
-     * Complexité : O(h), où h est la hauteur de l'arbre.
-     *
-     * @param px Coordonnée X du point.
-     * @param py Coordonnée Y du point.
-     * @return Le Quadtree correspondant à la région divisible.
-     */
-    public Quadtree searchQTree(int px, int py) {
-        
-        if (this.estFeuille()) {
+    public Quadtree searchQTree(int x, int y) {
+        if (this.estFeuille() || this.divisionPoint == null) {
             return this;
         }
-        if (this.point == null) {
-            return this;
-        }
-
-        if (px < point.getX()) {
-            if (py < point.getY()) {
-                return enfants[3].searchQTree(px, py); // Sud-Ouest
+    
+        int midX = this.divisionPoint.getX();
+        int midY = this.divisionPoint.getY();
+    
+        if (x < midX) {
+            if (y >= midY) {
+                // NW Quadrant
+                return children[0].searchQTree(x, y);
             } else {
-                return enfants[0].searchQTree(px, py); // Nord-Ouest
+                // SW Quadrant
+                return children[3].searchQTree(x, y);
             }
         } else {
-            if (py < point.getY()) {
-                return enfants[2].searchQTree(px, py); // Sud-Est
+            if (y >= midY) {
+                // NE Quadrant
+                return children[1].searchQTree(x, y);
             } else {
-                return enfants[1].searchQTree(px, py); // Nord-Est
+                // SE Quadrant
+                return children[2].searchQTree(x, y);
             }
         }
     }
-
-    /**
-     * Ajoute un point au Quadtree en divisant la région correspondante.
-     * Complexité : O(h), où h est la hauteur de l'arbre.
-     *
-     * @param nouveauPoint Le point à ajouter.
-     */
-    public void addQTree(Point nouveauPoint) {
-        Quadtree region = this.searchQTree((int)nouveauPoint.getX(),(int) nouveauPoint.getY());
-        region.diviser(nouveauPoint);
-    }
-
-    /**
-     * Divise la région en 4 parties en utilisant le point donné pour séparer les 4 sous-régions.
-     * Complexité : O(1)
-     *
-     * @param nouveauPoint Le point qui sépare les 4 sous-régions.
-     */
-    public void diviser(Point nouveauPoint){
-        this.point = nouveauPoint;
-        this.enfants = new Quadtree[4];
-        Point point01 = new Point((int) this.getPointX().getX(), (int) nouveauPoint.getY());
-        Point point02 = new Point((int)nouveauPoint.getX(),(int) this.getPointY().getY());
-        Point point21 = new Point((int)nouveauPoint.getX(), (int)this.getPointX().getY());
-        Point point22 = new Point((int)this.getPointY().getX(), (int)nouveauPoint.getY());
-        
-        this.enfants[0] = new Quadtree(point01, point02, nouveauPoint.getC1());
-        this.enfants[1] = new Quadtree(this.point, this.pointY, nouveauPoint.getC2());
-        this.enfants[2] = new Quadtree(point21, point22, nouveauPoint.getC3());
-        this.enfants[3] = new Quadtree(this.pointX, this.point, nouveauPoint.getC4());
     
-    }
+    //Methode Projet
 
-    /**
-     * Construit le Quadtree en utilisant une liste de points.
-     * Complexité : O(m * h), où m est le nombre de points et h la hauteur de l'arbre.
-     *
-     * @param points Liste de points à insérer dans le Quadtree.
-     */
-    public void buildQTree(Point[] points) {
-        for (Point p : points) {
+    public void addQTree(Point divisionPoint) {
+        Quadtree region = this.searchQTree(divisionPoint.getX(), divisionPoint.getY());
+        region.diviser(divisionPoint);
+    }
+    
+    
+    //Methode Projet
+
+    public void buildQTree(Point[] divisionPoints) {
+        for (Point p : divisionPoints) {
             this.addQTree(p);
         }
     }
+    
+    //Methode Projet
 
-    /**
-     * Génère une image PNG à partir du Quadtree.
-     * Complexité : O(n²), où n est la résolution de l'image.
-     *
-     * @param chemin Chemin du fichier PNG de sortie.
-     * @param resolution Résolution de l'image (en pixels).
-     * @throws IOException En cas d'erreur d'écriture du fichier.
-     */
-    public void toImage(String chemin, int resolution) throws IOException {
+    public void toImage(String filename, int resolution) throws IOException {
         BufferedImage image = new BufferedImage(resolution, resolution, BufferedImage.TYPE_INT_ARGB);
         Graphics g = image.getGraphics();
 
+        // Start drawing from the root node
         this.dessiner(g, 0, 0, resolution);
 
-        ImageIO.write(image, "png", new File(chemin));
+        // Save the image to a file
+        ImageIO.write(image, "png", new File(filename));
     }
 
-    /**
-     * Dessine le quadtree sur un objet Graphics.
-     *
-     * @param g L'objet Graphics pour dessiner.
-     * @param x Origine X du dessin.
-     * @param y Origine Y du dessin.
-     * @param taille Taille de la région à dessiner.
-     */
-    private void dessiner(Graphics g, int x, int y, int taille) {
+    //Methode Projet
+
+    private void dessiner(Graphics g, int x, int y, int size) {
         if (this.estFeuille()) {
-            g.setColor(couleurToColor(this.couleur));
-            g.fillRect(x, y, taille, taille);
+            g.setColor(couleurToColor(this.color));
+            g.fillRect(x, y, size, size);
         } else {
-            int demiTaille = taille / 2;
-            enfants[0].dessiner(g, x, y, demiTaille); // Nord-Ouest
-            enfants[1].dessiner(g, x + demiTaille, y, demiTaille); // Nord-Est
-            enfants[2].dessiner(g, x + demiTaille, y + demiTaille, demiTaille); // Sud-Est
-            enfants[3].dessiner(g, x, y + demiTaille, demiTaille); // Sud-Ouest
+            int halfSize = size / 2;
+    
+            // NW Quadrant (children[0])
+            children[0].dessiner(g, x, y, halfSize);
+    
+            // NE Quadrant (children[1])
+            children[1].dessiner(g, x + halfSize, y, halfSize);
+    
+            // SE Quadrant (children[2])
+            children[2].dessiner(g, x + halfSize, y + halfSize, halfSize);
+    
+            // SW Quadrant (children[3])
+            children[3].dessiner(g, x, y + halfSize, halfSize);
         }
     }
 
-    /**
-     * Convertit une couleur en char en un objet Color.
-     *
-     * @param couleur La couleur sous forme de char.
-     * @return Un objet Color correspondant.
-     */
     private Color couleurToColor(char couleur) {
         switch (couleur) {
             case 'R': return Color.RED;
+            case 'G': return Color.GREEN;
             case 'B': return Color.BLUE;
-            case 'J': return Color.YELLOW;
-            case 'G': return Color.LIGHT_GRAY;
-            case 'N': return Color.BLACK;
-            default: return Color.WHITE;
+            case 'Y': return Color.YELLOW;
+            case 'M': return Color.MAGENTA;
+            case 'C': return Color.CYAN;
+            case 'K': return Color.BLACK;
+            case 'W': return Color.WHITE;
+            default: return Color.GRAY;
         }
     }
+    
+    //Methode Projet
 
-    /**
-     * Génère une représentation textuelle parenthésée du Quadtree.
-     * Complexité : O(n), où n est le nombre de nœuds.
-     *
-     * @return Une chaîne de caractères représentant l'arbre.
-     */
     public String toText() {
         if (this.estFeuille()) {
-            return String.valueOf(this.couleur);
-        }
-
-        StringBuilder sb = new StringBuilder();
-        sb.append("(");
-        for (Quadtree enfant : enfants) {
-            sb.append(enfant.toText());
-        }
-        sb.append(")");
-        return sb.toString();
-    }
-
-    /**
-     * Recolore une région contenant le point donné.
-     * Complexité : O(h), où h est la hauteur de l'arbre.
-     *
-     * @param px Coordonnée X du point.
-     * @param py Coordonnée Y du point.
-     * @param nouvelleCouleur La nouvelle couleur à appliquer.
-     */
-    public void reColor(int px, int py, char nouvelleCouleur) {
-        Quadtree region = this.searchQTree(px, py);
-        region.couleur = nouvelleCouleur;
-    }
-
-
-    /**
-     * Compresse le Quadtree en combinant les régions de même couleur.
-     * Complexité : O(n), où n est le nombre de nœuds.
-     */
-    public void compressQTree() {
-        if (!this.estFeuille() && enfants != null) {
-            for (Quadtree enfant : enfants) {
-                enfant.compressQTree();
+            return String.valueOf(this.color);
+        } else {
+            StringBuilder sb = new StringBuilder();
+            sb.append("(");
+            for (Quadtree child : children) {
+                sb.append(child.toText());
             }
+            sb.append(")");
+            return sb.toString();
+        }
+    }
+    
+    //Methode Projet
 
-            // Vérifie si tous les enfants ont la même couleur
-            char couleurCommune = enfants[0].couleur;
-            boolean memeCouleur = true;
+    public void reColor(int x, int y, char newColor) {
+        Quadtree region = this.searchQTree(x, y);
+        if (region != null && region.estFeuille()) {
+            region.setColor(newColor);
+        }
+    }
+    
+    //Methode Projet
 
-            for (Quadtree enfant : enfants) {
-                if (enfant.couleur != couleurCommune || !enfant.estFeuille()) {
-                    memeCouleur = false;
+    public void compressQTree() {
+        if (!this.estFeuille() && this.children != null) {
+            // Recursively compress children
+            for (Quadtree child : children) {
+                child.compressQTree();
+            }
+    
+            // Check if all children are leaves with the same color
+            boolean canCompress = true;
+            char commonColor = children[0].getColor();
+    
+            for (Quadtree child : children) {
+                if (!child.estFeuille() || child.getColor() != commonColor) {
+                    canCompress = false;
                     break;
                 }
             }
-
-            // Compresse si tous les enfants ont la même couleur
-            if (memeCouleur) {
-                this.enfants = null;
-                this.couleur = couleurCommune;
+    
+            // If can compress, make this node a leaf
+            if (canCompress) {
+                this.children = null;
+                this.color = commonColor;
+                this.divisionPoint = null;
             }
         }
     }
-
-    //get et set 
-
-    public Point getPointX() {     
-        return this.pointX; 
-    }   
-
-    public Point getPointY() {     
-        return this.pointY; 
-    }
+    
 
 }

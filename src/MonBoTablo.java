@@ -15,9 +15,9 @@ public class MonBoTablo {
         // For testing purposes, we'll hardcode some division points
         // Each Point includes x, y, c1, c2, c3, c4 (colors for NW, NE, SE, SW)
         Point[] divisionPoints = new Point[] {
-            new Point(128, 128, 'R', 'G', 'B', 'Y'),
-            new Point(64, 64, 'C', 'R', 'B', 'W'),
-            new Point(192, 192, 'Y', 'B', 'G', 'R')
+            new Point(128, 128, 'R', 'G', 'B', 'J'),
+            new Point(64, 64, 'B', 'R', 'B', 'W'),
+            new Point(192, 192, 'J', 'B', 'G', 'R')
         };
 
         // Build the quadtree using the division points

@@ -200,8 +200,8 @@ private Quadtree[] children; // Four children representing the quadrants
         switch (couleur) {
             case 'R': return Color.RED;
             case 'B': return Color.BLUE;
-            case 'Y': return Color.YELLOW;
-            case 'K': return Color.BLACK;
+            case 'J': return Color.YELLOW;
+            case 'N': return Color.BLACK;
             case 'G': return Color.GRAY;
             default: return Color.WHITE;
         }

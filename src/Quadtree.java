@@ -77,43 +77,50 @@ private Quadtree[] children; // Four children representing the quadrants
             return;
         }
     
+        // Check if the division point lies within the current region
+        if (divisionPoint.getX() <= this.bottomLeft.getX() || divisionPoint.getX() >= this.topRight.getX()
+            || divisionPoint.getY() <= this.bottomLeft.getY() || divisionPoint.getY() >= this.topRight.getY()) {
+            System.err.println("Division point is outside the current region.");
+            return;
+        }
+    
         this.divisionPoint = divisionPoint;
         this.children = new Quadtree[4];
     
-        int midX = divisionPoint.getX();
-        int midY = divisionPoint.getY();
+        int dx = divisionPoint.getX();
+        int dy = divisionPoint.getY();
     
-        // NW Quadrant (children[0])
+        // NW Quadrant (children[0]): x0 <= x <= dx, dy <= y <= y1
         children[0] = new Quadtree(
-            new Point(this.bottomLeft.getX(), midY),
-            new Point(midX, this.topRight.getY()),
+            new Point(this.bottomLeft.getX(), dy),
+            new Point(dx, this.topRight.getY()),
             divisionPoint.getC1()
         );
     
-        // NE Quadrant (children[1])
+        // NE Quadrant (children[1]): dx <= x <= x1, dy <= y <= y1
         children[1] = new Quadtree(
-            new Point(midX, midY),
+            new Point(dx, dy),
             this.topRight,
             divisionPoint.getC2()
         );
     
-        // SE Quadrant (children[2])
+        // SE Quadrant (children[2]): dx <= x <= x1, y0 <= y <= dy
         children[2] = new Quadtree(
-            divisionPoint,
-            new Point(this.topRight.getX(), midY),
+            new Point(dx, this.bottomLeft.getY()),
+            new Point(this.topRight.getX(), dy),
             divisionPoint.getC3()
         );
     
-        // SW Quadrant (children[3])
+        // SW Quadrant (children[3]): x0 <= x <= dx, y0 <= y <= dy
         children[3] = new Quadtree(
             this.bottomLeft,
-            new Point(midX, midY),
+            new Point(dx, dy),
             divisionPoint.getC4()
         );
     
         // After division, this node is no longer a leaf, so reset color
         this.color = '\0';
-    }
+    } 
     
     //Methode Projet
 
@@ -167,7 +174,7 @@ private Quadtree[] children; // Four children representing the quadrants
         Graphics g = image.getGraphics();
 
         // Start drawing from the root node
-        this.dessiner(g, 0, 0, resolution);
+        this.dessiner(g,resolution);
 
         // Save the image to a file
         ImageIO.write(image, "png", new File(filename));
@@ -175,26 +182,24 @@ private Quadtree[] children; // Four children representing the quadrants
 
     //Methode Projet
 
-    private void dessiner(Graphics g, int x, int y, int size) {
+    private void dessiner(Graphics g, int imageSize) {
         if (this.estFeuille()) {
             g.setColor(couleurToColor(this.color));
-            g.fillRect(x, y, size, size);
+    
+            int x = this.bottomLeft.getX();
+            int y = imageSize - this.topRight.getY(); // Invert y-coordinate for drawing
+            int width = this.topRight.getX() - this.bottomLeft.getX();
+            int height = this.topRight.getY() - this.bottomLeft.getY();
+    
+            g.fillRect(x, y, width, height);
         } else {
-            int halfSize = size / 2;
-    
-            // NW Quadrant (children[0])
-            children[0].dessiner(g, x, y, halfSize);
-    
-            // NE Quadrant (children[1])
-            children[1].dessiner(g, x + halfSize, y, halfSize);
-    
-            // SE Quadrant (children[2])
-            children[2].dessiner(g, x + halfSize, y + halfSize, halfSize);
-    
-            // SW Quadrant (children[3])
-            children[3].dessiner(g, x, y + halfSize, halfSize);
+            // Recursively draw children
+            for (Quadtree child : children) {
+                child.dessiner(g, imageSize);
+            }
         }
     }
+    
 
     private Color couleurToColor(char couleur) {
         switch (couleur) {

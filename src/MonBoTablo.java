@@ -3,8 +3,8 @@ import java.io.IOException;
 public class MonBoTablo {
 
     public static void main(String[] args) {
-        // Define the size of the image (e.g., 1080 x 1080 pixels)
-        int imageSize = 1080;
+        // Define the size of the image (e.g., 1000 x 1000 pixels)
+        int imageSize = 1000;
 
         // Create the root quadtree node representing the entire image
         Point bottomLeft = new Point(0, 0);
@@ -15,9 +15,11 @@ public class MonBoTablo {
         // For testing purposes, we'll hardcode some division points
         // Each Point includes x, y, c1, c2, c3, c4 (colors for NW, NE, SE, SW)
         Point[] divisionPoints = new Point[] {
-            new Point(128, 128, 'R', 'G', 'B', 'J'),
-            new Point(64, 64, 'B', 'R', 'B', 'W'),
-            new Point(192, 192, 'J', 'B', 'G', 'R')
+            new Point(600, 500, 'R', 'G', 'J', 'B'),
+            new Point(900, 400, 'J', 'B', 'N', 'B'),
+            new Point(800, 300, 'G', 'R', 'B', 'J'),
+            new Point(850, 350, 'R', 'J', 'R', 'J'),
+            new Point(540, 120, 'B', 'R', 'J', 'G')
         };
 
         // Build the quadtree using the division points

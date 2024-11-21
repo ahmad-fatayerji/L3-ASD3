@@ -1,9 +1,5 @@
 import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
-import javax.imageio.ImageIO;
 public class Quadtree{
 
 // Attributes
@@ -169,37 +165,84 @@ private Quadtree[] children; // Four children representing the quadrants
     
     //Methode Projet
 
-    public void toImage(String filename, int resolution) throws IOException {
-        BufferedImage image = new BufferedImage(resolution, resolution, BufferedImage.TYPE_INT_ARGB);
-        Graphics g = image.getGraphics();
-
-        // Start drawing from the root node
-        this.dessiner(g,resolution);
-
-        // Save the image to a file
-        ImageIO.write(image, "png", new File(filename));
-    }
-
-    //Methode Projet
-
-    private void dessiner(Graphics g, int imageSize) {
+    private void dessiner(Image img, int imageSize, int thickness) {
         if (this.estFeuille()) {
-            g.setColor(couleurToColor(this.color));
-    
-            int x = this.bottomLeft.getX();
-            int y = imageSize - this.topRight.getY(); // Invert y-coordinate for drawing
-            int width = this.topRight.getX() - this.bottomLeft.getX();
-            int height = this.topRight.getY() - this.bottomLeft.getY();
-    
-            g.fillRect(x, y, width, height);
+            // Determine the coordinates in quadtree space
+            int xStart = this.bottomLeft.getX();
+            int yStart = this.bottomLeft.getY();
+            int xEnd = this.topRight.getX();
+            int yEnd = this.topRight.getY();
+
+            // Map to image coordinates
+            int yStartImg = imageSize - yEnd;
+            int yEndImg = imageSize - yStart;
+
+            // Ensure coordinates are within image bounds
+            xStart = Math.max(0, xStart);
+            xEnd = Math.min(imageSize, xEnd);
+            yStartImg = Math.max(0, yStartImg);
+            yEndImg = Math.min(imageSize, yEndImg);
+
+            // Ensure start < end
+            if (xStart >= xEnd || yStartImg >= yEndImg) {
+                // Invalid rectangle, skip drawing
+                return;
+            }
+
+            // Set the rectangle
+            Color color = couleurToColor(this.color);
+            img.setRectangle(xStart, xEnd, yStartImg, yEndImg, color);
+
+            // Draw borders if thickness > 0
+            if (thickness > 0) {
+                Color borderColor = Color.BLACK;
+
+                // Left border
+                int leftBorderEndX = Math.min(xStart + thickness, xEnd);
+                if (xStart < leftBorderEndX) {
+                    img.setRectangle(xStart, leftBorderEndX, yStartImg, yEndImg, borderColor);
+                }
+
+                // Right border
+                int rightBorderStartX = Math.max(xEnd - thickness, xStart);
+                if (rightBorderStartX < xEnd) {
+                    img.setRectangle(rightBorderStartX, xEnd, yStartImg, yEndImg, borderColor);
+                }
+
+                // Top border
+                int topBorderEndY = Math.min(yStartImg + thickness, yEndImg);
+                if (yStartImg < topBorderEndY) {
+                    img.setRectangle(xStart, xEnd, yStartImg, topBorderEndY, borderColor);
+                }
+
+                // Bottom border
+                int bottomBorderStartY = Math.max(yEndImg - thickness, yStartImg);
+                if (bottomBorderStartY < yEndImg) {
+                    img.setRectangle(xStart, xEnd, bottomBorderStartY, yEndImg, borderColor);
+                }
+            }
         } else {
             // Recursively draw children
             for (Quadtree child : children) {
-                child.dessiner(g, imageSize);
+                child.dessiner(img, imageSize, thickness);
             }
         }
     }
+
+    //Methode Projet
     
+
+
+        public void toImage(String filename, int imageSize, int thickness) throws IOException {
+        // Create an image
+        Image img = new Image(imageSize, imageSize);
+
+        // Start drawing from the root node
+        this.dessiner(img, imageSize, thickness);
+
+        // Save the image to a file
+        img.save(filename);
+    }
 
     private Color couleurToColor(char couleur) {
         switch (couleur) {
@@ -265,6 +308,4 @@ private Quadtree[] children; // Four children representing the quadrants
             }
         }
     }
-    
-
 }

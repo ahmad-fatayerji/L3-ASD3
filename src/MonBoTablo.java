@@ -1,33 +1,67 @@
-
-
-
+import java.io.IOException;
 
 public class MonBoTablo {
+
     public static void main(String[] args) {
-        // Définir les points de base du Quadtree
-        Point basGauche = new Point(0, 0);
-        Point hautDroit = new Point(8, 8);
+        // Define the size of the image (e.g., 256 x 256 pixels)
+        int imageSize = 256;
 
-        // Créer un Quadtree de base avec une couleur par défaut
-        Quadtree quadtree = new Quadtree(basGauche, hautDroit, 'N');
+        // Create the root quadtree node representing the entire image
+        Point bottomLeft = new Point(0, 0);
+        Point topRight = new Point(imageSize, imageSize);
+        Quadtree quadtree = new Quadtree(bottomLeft, topRight);
 
-        // Tester la division du Quadtree
-        System.out.println("=== Division ===");
-        Point divisionPoint = new Point(4, 4);
-        quadtree.diviser(divisionPoint);
-        System.out.println("Division effectuée : 4 quadrants créés.");
+        // Define division points with their colors
+        // For testing purposes, we'll hardcode some division points
+        // Each Point includes x, y, c1, c2, c3, c4 (colors for NW, NE, SE, SW)
+        Point[] divisionPoints = new Point[] {
+            new Point(128, 128, 'R', 'G', 'B', 'Y'),
+            new Point(64, 64, 'C', 'M', 'K', 'W'),
+            new Point(192, 192, 'Y', 'B', 'G', 'R')
+        };
 
-        // Tester la recherche dans le Quadtree
-        System.out.println("\n=== Recherche ===");
-        Point recherchePoint = new Point(6, 6);
-        Quadtree regionTrouvee = quadtree.searchQTree(recherchePoint.getX(), recherchePoint.getY());
-        System.out.println("Point trouvé dans la région : (" +
-                regionTrouvee.getPointX().getX() + ", " + regionTrouvee.getPointX().getY() + ") -> (" +
-                regionTrouvee.getPointY().getX() + ", " + regionTrouvee.getPointY().getY() + ")");
+        // Build the quadtree using the division points
+        quadtree.buildQTree(divisionPoints);
 
-        // Test supplémentaire
-        System.out.println("\n=== Test supplémentaire ===");
-        quadtree.reColor(6, 6, 'R');
-        System.out.println("Couleur de la région modifiée à 'R'.");
+        // Generate the initial image
+        try {
+            quadtree.toImage("initial_image.png", imageSize);
+            System.out.println("Initial image generated: initial_image.png");
+        } catch (IOException e) {
+            System.err.println("Error generating image: " + e.getMessage());
+        }
+
+        // Output the quadtree structure to text
+        String quadtreeText = quadtree.toText();
+        System.out.println("Quadtree structure:");
+        System.out.println(quadtreeText);
+
+        // Test reColor method
+        // Change the color of the region containing point (50, 50) to 'N' (Black)
+        quadtree.reColor(50, 50, 'N');
+
+        // Generate the recolored image
+        try {
+            quadtree.toImage("recolored_image.png", imageSize);
+            System.out.println("Recolored image generated: recolored_image.png");
+        } catch (IOException e) {
+            System.err.println("Error generating recolored image: " + e.getMessage());
+        }
+
+        // Compress the quadtree
+        quadtree.compressQTree();
+
+        // Output the compressed quadtree structure to text
+        String compressedQuadtreeText = quadtree.toText();
+        System.out.println("Compressed quadtree structure:");
+        System.out.println(compressedQuadtreeText);
+
+        // Generate the compressed image
+        try {
+            quadtree.toImage("compressed_image.png", imageSize);
+            System.out.println("Compressed image generated: compressed_image.png");
+        } catch (IOException e) {
+            System.err.println("Error generating compressed image: " + e.getMessage());
+        }
     }
 }

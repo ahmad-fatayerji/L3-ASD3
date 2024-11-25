@@ -88,7 +88,7 @@ public class QuadtreeProcessor {
                 int y = Integer.parseInt(tokens[1].trim());
                 char newColor = tokens[2].trim().charAt(0);
     
-                quadtree.reColor(x, y, newColor);
+                //quadtree.reColor(x, y, newColor);
             } catch (NumberFormatException | IndexOutOfBoundsException e) {
                 System.err.println("Error parsing recoloring pair at line " + (m + 5 + i) + ": " + line.trim());
             }

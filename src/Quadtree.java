@@ -195,6 +195,7 @@ private Quadtree[] children; // Four children representing the quadrants
 
             // Draw borders if thickness > 0
             if (thickness > 0) {
+
                 Color borderColor = Color.BLACK;
 
                 // Left border
@@ -230,8 +231,6 @@ private Quadtree[] children; // Four children representing the quadrants
     }
 
     //Methode Projet
-    
-
 
         public void toImage(String filename, int imageSize, int thickness) throws IOException {
         // Create an image
@@ -273,39 +272,39 @@ private Quadtree[] children; // Four children representing the quadrants
     
     //Methode Projet
 
-    public void reColor(int x, int y, char newColor) {
-        Quadtree region = this.searchQTree(x, y);
-        if (region != null && region.estFeuille()) {
-            region.setColor(newColor);
-        }
-    }
+    // public void reColor(int x, int y, char newColor) {
+    //     Quadtree region = this.searchQTree(x, y);
+    //     if (region != null && region.estFeuille()) {
+    //         region.setColor(newColor);
+    //     }
+    // }
     
     //Methode Projet
 
-    public void compressQTree() {
-        if (!this.estFeuille() && this.children != null) {
-            // Recursively compress children
-            for (Quadtree child : children) {
-                child.compressQTree();
-            }
+    // public void compressQTree() {
+    //     if (!this.estFeuille() && this.children != null) {
+    //         // Recursively compress children
+    //         for (Quadtree child : children) {
+    //             child.compressQTree();
+    //         }
     
-            // Check if all children are leaves with the same color
-            boolean canCompress = true;
-            char commonColor = children[0].getColor();
+    //         // Check if all children are leaves with the same color
+    //         boolean canCompress = true;
+    //         char commonColor = children[0].getColor();
     
-            for (Quadtree child : children) {
-                if (!child.estFeuille() || child.getColor() != commonColor) {
-                    canCompress = false;
-                    break;
-                }
-            }
+    //         for (Quadtree child : children) {
+    //             if (!child.estFeuille() || child.getColor() != commonColor) {
+    //                 canCompress = false;
+    //                 break;
+    //             }
+    //         }
     
-            // If can compress, make this node a leaf
-            if (canCompress) {
-                this.children = null;
-                this.color = commonColor;
-                this.divisionPoint = null;
-            }
-        }
-    }
+    //         // If can compress, make this node a leaf
+    //         if (canCompress) {
+    //             this.children = null;
+    //             this.color = commonColor;
+    //             this.divisionPoint = null;
+    //         }
+    //     }
+    // }
 }

@@ -106,13 +106,13 @@ public class QuadtreeProcessor {
         }
 
         // Generate the image
-        String imageFilePath = outputDirectory + File.separator + "image_variant1.png";
+        String imageFilePath = outputDirectory + File.separator + "FatayerjiHalgandFichierEntree_B.png";
         quadtree.toImage(imageFilePath, imageSize, thickness);
         System.out.println("Image generated: " + imageFilePath);
 
         // Output the quadtree structure to text
         String quadtreeText = quadtree.toText();
-        String quadtreeTextFilePath = outputDirectory + File.separator + "quadtree_variant1.txt";
+        String quadtreeTextFilePath = outputDirectory + File.separator + "FatayerjiHalgandFichierEntree_B.txt";
         FileWriter writer = new FileWriter(quadtreeTextFilePath);
         writer.write(quadtreeText);
         writer.close();

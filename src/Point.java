@@ -20,6 +20,7 @@ public class Point {
     }
 
     // Getters
+    
     public int getX() { return x; }
     public int getY() { return y; }
     public char getC1() { return c1; }

@@ -18,6 +18,11 @@ public class QuadtreeProcessor {
         processInputFile(inputFilePath);
     }
 
+    /**
+     * Reads the input file and stores the values in the class attributes.
+     * @param inputFilePath the path to the input file
+     * @throws IOException if the file cannot be read
+     */
     private void processInputFile(String inputFilePath) throws IOException {
         BufferedReader reader = new BufferedReader(new FileReader(inputFilePath));
         String line;
@@ -109,6 +114,19 @@ public class QuadtreeProcessor {
     
     
 
+/**
+ * Generates output file names for base and recolored images and texts based on the input file name.
+ * 
+ * This method extracts the base name from the input file, removes its extension, and constructs
+ * four file paths using the given output directory. The generated file names include:
+ * - A base image file with a "_B.png" suffix
+ * - A base text file with a "_B.txt" suffix
+ * - A recolored image file with a "_R.png" suffix
+ * - A recolored text file with a "_R.txt" suffix
+ * 
+ * @param inputFileName the name of the input file from which to derive the base name
+ * @return an array of four strings representing the generated file paths
+ */
     public String[] generateOutputFileNames(String inputFileName) {
         // Extract the base file name without the extension
         String baseName = new File(inputFileName).getName();
@@ -126,6 +144,14 @@ public class QuadtreeProcessor {
         return new String[] { baseImageFile, baseTextFile, recoloredImageFile, recoloredTextFile };
     }
     
+    /**
+     * Generates four output files based on the given file names.
+     * 
+     * The method first builds the quadtree based on the division points. Then, it generates two pairs of output files: a base image and text pair, and a recolored image and text pair. The base pair is generated before any recoloring operations, and the recolored pair is generated after all recoloring operations have been applied. The generated files are written to the specified output directory.
+     * 
+     * @param fileNames an array of four strings representing the output file names. The order of the file names is important: the first two elements represent the base image and text files, and the last two elements represent the recolored image and text files.
+     * @throws IOException if the output directory does not exist or if any of the files cannot be written.
+     */
     public void generateFiles(String[] fileNames) throws IOException {
         // Ensure the output directory exists
         File dir = new File(outputDirectory);

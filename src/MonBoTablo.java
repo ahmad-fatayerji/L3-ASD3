@@ -2,6 +2,14 @@ import java.io.IOException;
 
 public class MonBoTablo {
 
+    /**
+     * Main entry point for the program.
+     * 
+     * @param args Three command-line arguments:
+     *             1. The variant number (currently only 1 is supported)
+     *             2. The path to the input file
+     *             3. The output directory
+     */
     public static void main(String[] args) {
         // Check for correct number of arguments
         if (args.length != 3) {

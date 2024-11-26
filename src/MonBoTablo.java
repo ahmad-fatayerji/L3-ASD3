@@ -22,7 +22,12 @@ public class MonBoTablo {
         // Create a QuadtreeProcessor instance and generate output files
         try {
             QuadtreeProcessor processor = new QuadtreeProcessor(inputFilePath, outputDirectory);
-            processor.generateOutputFiles();
+
+            // Generate the file names using the input file path
+            String[] fileNames = processor.generateOutputFileNames(inputFilePath);
+
+            // Pass the generated file names to generateFiles
+            processor.generateFiles(fileNames);
         } catch (IOException e) {
             System.err.println("Error processing quadtree: " + e.getMessage());
         }

@@ -261,7 +261,7 @@ private Quadtree[] children; // Four children representing the quadrants
      */
     private void dessiner(Image img, int imageSize, int thickness) {
         if (this.estFeuille()) {
-            // Determine the coordinates in quadtree space
+             // Determine the coordinates in quadtree space
             int xStart = this.bottomLeft.getX();
             int yStart = this.bottomLeft.getY();
             int xEnd = this.topRight.getX();
@@ -276,7 +276,6 @@ private Quadtree[] children; // Four children representing the quadrants
             xEnd = Math.min(imageSize, xEnd);
             yStartImg = Math.max(0, yStartImg);
             yEndImg = Math.min(imageSize, yEndImg);
-
             // Ensure start < end
             if (xStart >= xEnd || yStartImg >= yEndImg) {
                 // Invalid rectangle, skip drawing
@@ -286,38 +285,44 @@ private Quadtree[] children; // Four children representing the quadrants
             // Set the rectangle
             Color color = couleurToColor(this.color);
             img.setRectangle(xStart, xEnd, yStartImg, yEndImg, color);
+        
 
             // Draw borders if thickness > 0
-            if (thickness > 0 ) {
+          
+            if (thickness > 0) {
 
                 Color borderColor = Color.BLACK;
-
+                int thicknessR = (thickness-1)/2+1;// l'epaisseur de chaque coté du trait
+                    
+                    
+            
                 // Left border
-                int leftBorderEndX = Math.min(xStart + thickness, xEnd);
+                int leftBorderEndX = Math.min(xStart + thicknessR, xEnd);
                 if (xStart < leftBorderEndX) {
                     img.setRectangle(xStart, leftBorderEndX, yStartImg, yEndImg, borderColor);
                 }
 
-                // Right border
-                int rightBorderStartX = Math.max(xEnd - thickness, xStart);
+                    // Right border
+                int rightBorderStartX = Math.max(xEnd - thicknessR, xStart);
                 if (rightBorderStartX < xEnd) {
                     img.setRectangle(rightBorderStartX, xEnd, yStartImg, yEndImg, borderColor);
-                }
+                } 
 
                 // Top border
-                int topBorderEndY = Math.min(yStartImg + thickness, yEndImg);
+                int topBorderEndY = Math.min(yStartImg + thicknessR, yEndImg);
                 if (yStartImg < topBorderEndY) {
                     img.setRectangle(xStart, xEnd, yStartImg, topBorderEndY, borderColor);
                 }
 
                 // Bottom border
-                int bottomBorderStartY = Math.max(yEndImg - thickness, yStartImg);
+                int bottomBorderStartY = Math.max(yEndImg - thicknessR, yStartImg);
                 if (bottomBorderStartY < yEndImg) {
                     img.setRectangle(xStart, xEnd, bottomBorderStartY, yEndImg, borderColor);
                 }
             }
-        } else {
-            // Recursively draw children
+        }
+        else {
+        // Recursively draw children
             for (Quadtree child : children) {
                 child.dessiner(img, imageSize, thickness);
             }

@@ -27,3 +27,27 @@ Pour l'arbre ternaire, nous avons choisi de combiner la région Nord-Ouest et la
 
 ### Format du fichier d'entrée pour la variante 2
 
+Le fichier d'entrée pour l'arbre ternaire doit respecter cette structure :
+
+```
+x, y, c1, c2, c3
+```
+Où :
+x et y sont les coordonnées du centre de division.
+c1, c2, c3 sont les couleurs pour les régions définies par la division ternaire.
+
+```
+1000 
+5 
+600,500,R,G,J
+900,400,J,B,N
+800,300,G,R,B
+850,350,R,J,R
+540,120,B,R,J
+19 
+4 
+400,300,G 
+570,250,G 
+700,10,R 
+580,12,G
+```

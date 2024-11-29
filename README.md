@@ -34,7 +34,9 @@ x, y, c1, c2, c3
 ```
 Où :
 - ```x``` et ```y``` sont les coordonnées du centre de division.
-- ```c1```, ```c2```, ```c3``` sont les couleurs pour les régions définies par la division ternaire.
+- ```c1``` couleur de la region Nord-Ouest.
+- ```c2``` couleur de la region Sud-Ouest.
+- ```c3``` couleur de la region Est.
 
 #### Voici un exemple de fichier d'entrée pour la seconde variante
 ```

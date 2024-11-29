@@ -2,6 +2,7 @@ import java.io.IOException;
 
 public class MonBoTablo {
 
+    // O(m + k) où m est le nombre de points de division et k est le nombre de recolorations.
     public static void main(String[] args) {
         if (args.length != 3) {
             System.err.println("Usage: java MonBoTablo <variant> <input_file_path> <output_directory>");

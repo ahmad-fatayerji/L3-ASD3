@@ -43,7 +43,7 @@ public abstract class Tree {
         return this.children == null;
     }
 
-    // Abstract Methods (to be implemented by subclasses)
+    // Abstract Methods
     public abstract void diviser(Point divisionPoint);
 
     public abstract Tree searchQTree(int x, int y);
@@ -51,17 +51,21 @@ public abstract class Tree {
     protected abstract void dessiner(Image img, int imageSize, int thickness);
 
     // Common Methods
+
+    // O(log(n)) pour trouver la région appropriée et diviser.
     public void addQTree(Point divisionPoint) {
         Tree region = this.searchQTree(divisionPoint.getX(), divisionPoint.getY());
         region.diviser(divisionPoint);
     }
 
+    // O(m * log(n)), où m est le nombre de points de division.
     public void buildQTree(Point[] divisionPoints) {
         for (Point p : divisionPoints) {
             this.addQTree(p);
         }
     }
 
+    //  O(n), où n est le nombre de feuilles.
     public void toImage(String filename, int imageSize, int thickness) throws IOException {
         // Create an image
         Image img = new Image(imageSize, imageSize);
@@ -73,6 +77,7 @@ public abstract class Tree {
         img.save(filename);
     }
 
+    // O(n), où n est le nombre de nœuds dans l'arbre.
     public String toText() {
         if (this.estFeuille()) {
             return String.valueOf(this.color);
@@ -87,6 +92,7 @@ public abstract class Tree {
         }
     }
 
+    // O(log(n)) pour trouver une région et recolorer.
     public void reColor(int x, int y, char newColor) {
         Tree region = this.searchQTree(x, y);
         if (region != null && region.estFeuille()) {
@@ -95,6 +101,7 @@ public abstract class Tree {
         }
     }
 
+    //  O(n) pour vérifier et compresser les feuilles.
     public void compressQTree() {
         if (!this.estFeuille() && this.children != null) {
             // Recursively compress children

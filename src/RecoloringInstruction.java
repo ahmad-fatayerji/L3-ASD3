@@ -3,36 +3,28 @@ public class RecoloringInstruction {
     private int y;
     private char newColor;
 
+    // O(1)
     public RecoloringInstruction(int x, int y, char newColor) {
         this.x = x;
         this.y = y;
         this.newColor = newColor;
     }
-
-    /**
-     * Returns the x-coordinate of the pixel to recolor.
-     * @return the x-coordinate
-     */
+    
+    // O(1)
     public int getX() {
         return x;
     }
 
-
-    /**
-     * Returns the y-coordinate of the pixel to recolor.
-     * @return the y-coordinate
-     */
+    // O(1)
+    public RecoloringInstruction() {
+    }
+    
+    // O(1)
     public int getY() {
         return y;
     }
 
-
-
-
-    /**
-     * Returns the new color of the pixel to recolor.
-     * @return the new color
-     */
+    // O(1)
     public char getNewColor() {
         return newColor;
     }

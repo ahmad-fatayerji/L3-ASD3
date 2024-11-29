@@ -18,11 +18,7 @@ public class TreeProcessor {
         processInputFile(inputFilePath, variant);
     }
 
-    /**
-     * Reads the input file and stores the values in the class attributes.
-     * @param inputFilePath the path to the input file
-     * @throws IOException if the file cannot be read
-     */
+    // O(m + k), où m est le nombre de points de division et k le nombre de recolorations.
     private void processInputFile(String inputFilePath, int variant) throws IOException {
         BufferedReader reader = new BufferedReader(new FileReader(inputFilePath));
         String line;
@@ -116,6 +112,7 @@ public class TreeProcessor {
         reader.close();
     }
     
+    // O(1)
     public String[] generateOutputFileNames(String inputFileName) {
         // Extract the base file name without the extension
         String baseName = new File(inputFileName).getName();
@@ -133,14 +130,7 @@ public class TreeProcessor {
         return new String[] { baseImageFile, baseTextFile, recoloredImageFile, recoloredTextFile };
     }
     
-    /**
-     * Generates four output files based on the given file names.
-     * 
-     * The method first builds the quadtree based on the division points. Then, it generates two pairs of output files: a base image and text pair, and a recolored image and text pair. The base pair is generated before any recoloring operations, and the recolored pair is generated after all recoloring operations have been applied. The generated files are written to the specified output directory.
-     * 
-     * @param fileNames an array of four strings representing the output file names. The order of the file names is important: the first two elements represent the base image and text files, and the last two elements represent the recolored image and text files.
-     * @throws IOException if the output directory does not exist or if any of the files cannot be written.
-     */
+    //  O(m * log(n) + k * log(n)), où m est le nombre de divisions et k est le nombre de recolorations.
     public void generateFiles(String[] fileNames) throws IOException {
         // Ensure the output directory exists
         File dir = new File(outputDirectory);

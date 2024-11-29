@@ -22,6 +22,7 @@ public class Ternarytree extends Tree {
         this.divisionPoint = null;
     }
 
+    // O(1) (divise une feuille en 3 sous-régions).
     @Override
     public void diviser(Point divisionPoint) {
         if (!this.estFeuille()) {
@@ -67,6 +68,8 @@ public class Ternarytree extends Tree {
         this.color = '\0';
     }
 
+
+    // O(log(n)) dans le pire des cas, où n est la taille de l'arbre.
     @Override
     public Tree searchQTree(int x, int y) {
         if (this.estFeuille() || this.divisionPoint == null) {
@@ -88,6 +91,8 @@ public class Ternarytree extends Tree {
         }
     }
 
+
+    // O(n) dans le pire des cas, où n est le nombre de feuilles.
     @Override
     protected void dessiner(Image img, int imageSize, int thickness) {
         if (this.estFeuille()) {

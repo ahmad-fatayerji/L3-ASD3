@@ -6,15 +6,15 @@ Pour compiler le programme, utiliser la commande suivante depuis le répertoire 
 
 ```shell
 javac -source 1.7 -target 1.7 -d FatayerjiHalgand/bin FatayerjiHalgand/src/*.java
-
-
-
-# Pour Quad Tree
-java -classpath FatayerjiHalgand/bin MonBoTablo 1 FatayerjiHalgand/data/input1.txt FatayerjiHalgand/output
-# Pour Ternary Tree
-java -classpath FatayerjiHalgand/bin MonBoTablo 2 FatayerjiHalgand/data/input2.txt FatayerjiHalgand/output
-
 ```
+### Execution
+```
+## Pour Quad Tree
+java -classpath FatayerjiHalgand/bin MonBoTablo 1 FatayerjiHalgand/data/input1.txt FatayerjiHalgand/output
+## Pour Ternary Tree
+java -classpath FatayerjiHalgand/bin MonBoTablo 2 FatayerjiHalgand/data/input2.txt FatayerjiHalgand/output
+```
+
 
 Les 2 manières utilisent le même fichier en entré. Pour le quad tree, on utilise les 4 couleurs de la ligne. Pour le ternary tree, on ignore simplement la dernière valeur. ainsi la ligne :
 

@@ -38,13 +38,13 @@ Un arbre ternaire représente une région rectangulaire qui peut être divisée 
 1. Etat initial
 - Chaque nœud dans l'arbre ternaire représente une région rectangulaire définie par :
     - __Point inférieur gauche (```bottomLeft```) :__ ```(x0, y0)```
-    - __Point supérieur gauche (```topRight```) :__ ```(x1, y1)```
+    - __Point supérieur droite (```topRight```) :__ ```(x1, y1)```
 - Si le nœud est une __feuille__ (sans enfants), il représente une région qui peut être divisée.
 - Le __point de division__ ```(dx, dy)``` est l'élément clé qui déclenche la division.
 
 2. Processus de division
 Lorsqu’un nœud feuille est divisé, il divise la région rectangulaire en trois __sous-régions__ :
-    1.  __Région Ouest :__ La partie située à gauche du point de division.
+    - __Région Ouest :__ La partie située à gauche du point de division.
     2.  __Région Nord-Est :__ La partie située au-dessus et à droite du point de division.
     3.  __Région Sud-Est :__ La partie située en dessous et à droite du point de division.
 - Chaque sous-région est associée à une couleur (```c1```, ```c2```, ```c3```) fournie en entrée avec le point de division.

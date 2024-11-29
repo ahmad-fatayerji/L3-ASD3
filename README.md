@@ -1,4 +1,4 @@
-## FATAYERJI Ahmad et HALGAND Kyllian - Mon Bo Tablo
+## FATAYERJI Ahmad et HALGAND Kyllian - MonBoTablo
 
 ### Compilation
 

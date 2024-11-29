@@ -4,18 +4,18 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 
-public class QuadtreeProcessor {
+public class TreeProcessor {
 
-    private Quadtree quadtree;
+    private Tree tree; // Now supports both Quadtree and Ternarytree
     private int imageSize;
     private int thickness;
     private String outputDirectory;
     private Point[] divisionPoints; // Array of division points
     private RecoloringInstruction[] recoloringPairs; // Array of recoloring instructions
 
-    public QuadtreeProcessor(String inputFilePath, String outputDirectory) throws IOException {
+    public TreeProcessor(String inputFilePath, String outputDirectory, int variant) throws IOException {
         this.outputDirectory = outputDirectory;
-        processInputFile(inputFilePath);
+        processInputFile(inputFilePath, variant);
     }
 
     /**
@@ -23,7 +23,7 @@ public class QuadtreeProcessor {
      * @param inputFilePath the path to the input file
      * @throws IOException if the file cannot be read
      */
-    private void processInputFile(String inputFilePath) throws IOException {
+    private void processInputFile(String inputFilePath, int variant) throws IOException {
         BufferedReader reader = new BufferedReader(new FileReader(inputFilePath));
         String line;
     
@@ -32,10 +32,16 @@ public class QuadtreeProcessor {
         if (line == null) throw new IOException("Input file is empty.");
         imageSize = Integer.parseInt(line.trim());
     
-        // Initialize root quadtree
+        // Initialize the tree based on the variant
         Point bottomLeft = new Point(0, 0);
         Point topRight = new Point(imageSize, imageSize);
-        quadtree = new Quadtree(bottomLeft, topRight);
+        if (variant == 1) {
+            tree = new Quadtree(bottomLeft, topRight);
+        } else if (variant == 2) {
+            tree = new Ternarytree(bottomLeft, topRight);
+        } else {
+            throw new IllegalArgumentException("Unsupported tree variant: " + variant);
+        }
     
         // Read number of division centers
         line = reader.readLine();
@@ -43,32 +49,30 @@ public class QuadtreeProcessor {
         int m = Integer.parseInt(line.trim());
     
         // Store division centers
-        Point[] divisionPoints = new Point[m];
+        divisionPoints = new Point[m];
         for (int i = 0; i < m; i++) {
             line = reader.readLine();
             if (line == null) throw new IOException("Unexpected end of file while reading division centers.");
-    
             String[] tokens = line.split(",");
-            if (tokens.length != 6) {
-                System.err.println("Invalid division center format at line " + (3 + i) + ": " + line.trim());
-                continue;
-            }
-            try {
+            if (variant == 1 && tokens.length == 6) { // Quadtree requires 4 colors
                 int x = Integer.parseInt(tokens[0].trim());
                 int y = Integer.parseInt(tokens[1].trim());
                 char c1 = tokens[2].trim().charAt(0);
                 char c2 = tokens[3].trim().charAt(0);
                 char c3 = tokens[4].trim().charAt(0);
                 char c4 = tokens[5].trim().charAt(0);
-    
                 divisionPoints[i] = new Point(x, y, c1, c2, c3, c4);
-            } catch (NumberFormatException | IndexOutOfBoundsException e) {
-                System.err.println("Error parsing division center at line " + (3 + i) + ": " + line.trim());
+            } else if (variant == 2 && tokens.length == 5) { // Ternarytree requires 3 colors
+                int x = Integer.parseInt(tokens[0].trim());
+                int y = Integer.parseInt(tokens[1].trim());
+                char c1 = tokens[2].trim().charAt(0);
+                char c2 = tokens[3].trim().charAt(0);
+                char c3 = tokens[4].trim().charAt(0);
+                divisionPoints[i] = new Point(x, y, c1, c2, c3);
+            } else {
+                throw new IOException("Invalid number of color tokens for the given variant at line " + (i + 3));
             }
         }
-    
-        // Store division points in the class attribute
-        this.divisionPoints = divisionPoints;
     
         // Read thickness
         line = reader.readLine();
@@ -112,21 +116,6 @@ public class QuadtreeProcessor {
         reader.close();
     }
     
-    
-
-/**
- * Generates output file names for base and recolored images and texts based on the input file name.
- * 
- * This method extracts the base name from the input file, removes its extension, and constructs
- * four file paths using the given output directory. The generated file names include:
- * - A base image file with a "_B.png" suffix
- * - A base text file with a "_B.txt" suffix
- * - A recolored image file with a "_R.png" suffix
- * - A recolored text file with a "_R.txt" suffix
- * 
- * @param inputFileName the name of the input file from which to derive the base name
- * @return an array of four strings representing the generated file paths
- */
     public String[] generateOutputFileNames(String inputFileName) {
         // Extract the base file name without the extension
         String baseName = new File(inputFileName).getName();
@@ -160,29 +149,29 @@ public class QuadtreeProcessor {
         }
     
         // Build the quadtree
-        quadtree.buildQTree(divisionPoints);
+        tree.buildQTree(divisionPoints);
     
         // Generate the base outputs
-        quadtree.toImage(fileNames[0], imageSize, thickness); // Base image
+        tree.toImage(fileNames[0], imageSize, thickness); // Base image
         System.out.println("Base image generated: " + fileNames[0]);
     
-        String baseQuadtreeText = quadtree.toText();
+        String treeText = tree.toText();
         try (FileWriter writer = new FileWriter(fileNames[1])) { // Base text
-            writer.write(baseQuadtreeText);
+            writer.write(treeText);
         }
         System.out.println("Base quadtree text written to: " + fileNames[1]);
     
         // Apply recoloring operations
         for (RecoloringInstruction instruction : recoloringPairs) {
-            quadtree.reColor(instruction.getX(), instruction.getY(), instruction.getNewColor());
-            quadtree.compressQTree();
+            tree.reColor(instruction.getX(), instruction.getY(), instruction.getNewColor());
+            tree.compressQTree();
         }
     
         // Generate the recolored outputs
-        quadtree.toImage(fileNames[2], imageSize, thickness); // Recolored image
+        tree.toImage(fileNames[2], imageSize, thickness); // Recolored image
         System.out.println("Recolored image generated: " + fileNames[2]);
     
-        String recoloredQuadtreeText = quadtree.toText();
+        String recoloredQuadtreeText = tree.toText();
         try (FileWriter writer = new FileWriter(fileNames[3])) { // Recolored text
             writer.write(recoloredQuadtreeText);
         }

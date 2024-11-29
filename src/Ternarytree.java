@@ -91,65 +91,89 @@ public class Ternarytree extends Tree {
     @Override
     protected void dessiner(Image img, int imageSize, int thickness) {
         if (this.estFeuille()) {
-            // Determine the coordinates in ternary tree space
-            int xStart = this.bottomLeft.getX();
-            int yStart = this.bottomLeft.getY();
-            int xEnd = this.topRight.getX();
-            int yEnd = this.topRight.getY();
+            // Leaf node: Fill its region with its color.
 
-            // Map to image coordinates
-            int yStartImg = imageSize - yEnd;
-            int yEndImg = imageSize - yStart;
+            // Map ternary tree coordinates to image coordinates
+            int xStart = Math.max(0, this.bottomLeft.getX());
+            int xEnd = Math.min(imageSize, this.topRight.getX());
+            int yStartImg = Math.max(0, imageSize - this.topRight.getY());
+            int yEndImg = Math.min(imageSize, imageSize - this.bottomLeft.getY());
 
-            // Ensure coordinates are within image bounds
-            xStart = Math.max(0, xStart);
-            xEnd = Math.min(imageSize, xEnd);
-            yStartImg = Math.max(0, yStartImg);
-            yEndImg = Math.min(imageSize, yEndImg);
-
-            // Ensure start < end
             if (xStart >= xEnd || yStartImg >= yEndImg) {
                 // Invalid rectangle, skip drawing
                 return;
             }
 
-            // Set the rectangle
+            // Fill the rectangle with the leaf node's color
             Color color = couleurToColor(this.color);
             img.setRectangle(xStart, xEnd, yStartImg, yEndImg, color);
 
-            // Draw borders if thickness > 0
-            if (thickness > 0) {
-                thickness = (thickness - 1) / 2 + 1;
-                Color borderColor = Color.BLACK;
-
-                // Left border
-                int leftBorderEndX = Math.min(xStart + thickness, xEnd);
-                if (xStart < leftBorderEndX) {
-                    img.setRectangle(xStart, leftBorderEndX, yStartImg, yEndImg, borderColor);
-                }
-
-                // Right border
-                int rightBorderStartX = Math.max(xEnd - thickness, xStart);
-                if (rightBorderStartX < xEnd) {
-                    img.setRectangle(rightBorderStartX, xEnd, yStartImg, yEndImg, borderColor);
-                }
-
-                // Top border
-                int topBorderEndY = Math.min(yStartImg + thickness, yEndImg);
-                if (yStartImg < topBorderEndY) {
-                    img.setRectangle(xStart, xEnd, yStartImg, topBorderEndY, borderColor);
-                }
-
-                // Bottom border
-                int bottomBorderStartY = Math.max(yEndImg - thickness, yStartImg);
-                if (bottomBorderStartY < yEndImg) {
-                    img.setRectangle(xStart, xEnd, bottomBorderStartY, yEndImg, borderColor);
-                }
-            }
+            // Do not draw any borders
         } else {
-            // Recursively draw children
+            // First, recursively draw the children
             for (Tree child : children) {
                 child.dessiner(img, imageSize, thickness);
+            }
+
+            // Now, draw the division lines at the division point
+            if (this.divisionPoint != null) {
+                int dx = this.divisionPoint.getX();
+                int dy = this.divisionPoint.getY();
+
+                // Map division point to image coordinates
+                int xDivImg = dx;
+                int yDivImg = imageSize - dy;
+
+                // Calculate half of the thickness
+                int halfThickness = thickness / 2;
+
+                Color lineColor = Color.BLACK;
+
+                // Get the bounds of the current region in image coordinates
+                int xStartRegion = Math.max(0, this.bottomLeft.getX());
+                int xEndRegion = Math.min(imageSize, this.topRight.getX());
+                int yStartRegionImg = Math.max(0, imageSize - this.topRight.getY());
+                int yEndRegionImg = Math.min(imageSize, imageSize - this.bottomLeft.getY());
+
+                // Draw vertical line at x = dx, within the current region's bounds
+                int xLineStart = xDivImg - halfThickness;
+                int xLineEnd = xDivImg + halfThickness + 1; // +1 because end index is exclusive
+
+                xLineStart = Math.max(xLineStart, xStartRegion);
+                xLineEnd = Math.min(xLineEnd, xEndRegion);
+
+                if (xLineStart < xLineEnd) {
+                    img.setRectangle(
+                        xLineStart,
+                        xLineEnd,
+                        yStartRegionImg,
+                        yEndRegionImg,
+                        lineColor
+                    );
+                }
+
+                // Draw horizontal line at y = dy, but only for x ≥ dx (right side)
+                int yLineStart = yDivImg - halfThickness;
+                int yLineEnd = yDivImg + halfThickness + 1; // +1 because end index is exclusive
+
+                yLineStart = Math.max(yLineStart, yStartRegionImg);
+                yLineEnd = Math.min(yLineEnd, yEndRegionImg);
+
+                int xLineStartH = dx; // Horizontal line starts at x = dx
+                int xLineEndH = xEndRegion; // Extends to the right edge of the region
+
+                xLineStartH = Math.max(xLineStartH, xStartRegion);
+                xLineEndH = Math.min(xLineEndH, xEndRegion);
+
+                if (xLineStartH < xLineEndH && yLineStart < yLineEnd) {
+                    img.setRectangle(
+                        xLineStartH,
+                        xLineEndH,
+                        yLineStart,
+                        yLineEnd,
+                        lineColor
+                    );
+                }
             }
         }
     }

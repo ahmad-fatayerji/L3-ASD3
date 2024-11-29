@@ -33,9 +33,10 @@ Le fichier d'entrée pour l'arbre ternaire doit respecter cette structure :
 x, y, c1, c2, c3
 ```
 Où :
-x et y sont les coordonnées du centre de division.
-c1, c2, c3 sont les couleurs pour les régions définies par la division ternaire.
+- ```x``` et ```y``` sont les coordonnées du centre de division.
+- ```c1```, ```c2```, ```c3``` sont les couleurs pour les régions définies par la division ternaire.
 
+#### Voici un exemple de fichier d'entrée pour la seconde variante
 ```
 1000 
 5 

@@ -1,5 +1,4 @@
 import java.awt.Color;
-
 public class Quadtree extends Tree {
 
     // Constructors

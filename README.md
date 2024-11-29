@@ -27,16 +27,16 @@ Pour l'arbre ternaire, nous avons choisi de combiner la région Nord-Ouest et la
 
 ### Format du fichier d'entrée pour la variante 2
 
-Le fichier d'entrée pour l'arbre ternaire doit respecter cette structure :
+Le fichier d'entrée pour l'arbre ternaire respecte la meme structure que la ```variante 1``` __sauf pour les points__, voici un exemple :
 
 ```
 x, y, c1, c2, c3
 ```
 Où :
 - ```x``` et ```y``` sont les coordonnées du centre de division.
-- ```c1``` couleur de la region Ouest.
-- ```c2``` couleur de la region Nord-Est.
-- ```c3``` couleur de la region Sud-Est.
+- ```c1``` couleur de la region __Ouest__.
+- ```c2``` couleur de la region __Nord-Est__.
+- ```c3``` couleur de la region __Sud-Est__.
 
 #### Voici un exemple de fichier d'entrée pour la seconde variante
 ```
@@ -54,3 +54,4 @@ Où :
 700,10,R 
 580,12,G
 ```
+###

@@ -17,8 +17,6 @@ public class MonBoTablo {
             String[] fileNames = processor.generateOutputFileNames(inputFilePath);
             processor.generateFiles(fileNames);
 
-        } catch (NumberFormatException e) {
-            System.err.println("Variant must be an integer.");
         } catch (IOException e) {
             System.err.println("Error processing tree: " + e.getMessage());
         }

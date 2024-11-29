@@ -25,6 +25,20 @@ java -classpath FatayerjiHalgand/bin MonBoTablo 2 FatayerjiHalgand/data/input2.t
 
 Pour l'arbre ternaire, nous avons choisi de combiner la région Nord-Ouest et la région Sud-Ouest en une seule région appelée Ouest. Ainsi, l’arbre est divisé en trois régions, dont l’une est plus étendue que les deux autres.
 
+L'arbre ternaire divise une région rectangulaire en trois sous-régions en utilisant un point de division donné (x, y). Ces sous-régions sont définies comme suit :
+
+1. __Région Ouest (O)__ : Inclut toutes les coordonnées où ```x <= dx```. Cette région est colorée avec la couleur ```c1```.
+2. __Région Nord-Est (NE)__ : Inclut toutes les coordonnées où ```x > dx et y >= dy```. Cette région est colorée avec la couleur ```c2```.
+3. __Région Sud-Est (SE)__ : Inclut toutes les coordonnées où ```x > dx et y < dy```. Cette région est colorée avec la couleur ```c3```.
+
+Le processus suit ces étapes :
+
+- La région contenant le point de division est subdivisée en trois sous-régions.
+- Le point de division lui-même est inclus dans la région NE pour simplifier la logique.
+- Les couleurs sont appliquées selon l'ordre fourni dans le fichier d'entrée.
+
+Ce processus est répété pour chaque point de division, dans l'ordre où ils sont spécifiés. Les couleurs et divisions créent une structure arborescente, où chaque nœud interne a exactement trois enfants.
+
 ### Format du fichier d'entrée pour la variante 2
 
 Le fichier d'entrée pour l'arbre ternaire respecte la meme structure que la ```variante 1``` __sauf pour les points__, voici un exemple :

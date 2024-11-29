@@ -27,9 +27,9 @@ Pour l'arbre ternaire, nous avons choisi de combiner la région Nord-Ouest et la
 
 L'arbre ternaire divise une région rectangulaire en trois sous-régions en utilisant un point de division donné (x, y). Ces sous-régions sont définies comme suit :
 
-1. __Région Ouest (O)__ : Inclut toutes les coordonnées où ```x <= dx```. Cette région est colorée avec la couleur ```c1```.
-2. __Région Nord-Est (NE)__ : Inclut toutes les coordonnées où ```x > dx et y >= dy```. Cette région est colorée avec la couleur ```c2```.
-3. __Région Sud-Est (SE)__ : Inclut toutes les coordonnées où ```x > dx et y < dy```. Cette région est colorée avec la couleur ```c3```.
+1. __Région Ouest (O)__ : Cette région est colorée avec la couleur ```c1```.
+2. __Région Nord-Est (NE)__ : Cette région est colorée avec la couleur ```c2```.
+3. __Région Sud-Est (SE)__ : Cette région est colorée avec la couleur ```c3```.
 
 Le processus suit ces étapes :
 
@@ -54,18 +54,18 @@ Où :
 
 #### Voici un exemple de fichier d'entrée pour la seconde variante
 ```
-1000 
-5 
-600,500,R,G,J
-900,400,J,B,N
-800,300,G,R,B
-850,350,R,J,R
-540,120,B,R,J
-19 
-4 
-400,300,G 
-570,250,G 
-700,10,R 
-580,12,G
+1000                //ligne 1 : pour l'image initiale, le côté n (en nombre de pixels). Ici n = 1000.
+5                   //ligne 2 : le nombre m >= 0 de centres fournis. Ici m = 5.
+600,500,R,G,J       //ligne 3 : le 1er centre.
+900,400,J,B,N       //ligne 4 : le 2ème centre.
+800,300,G,R,B       //etc
+850,350,R,J,R       
+540,120,B,R,J       //le m-ème centre.
+19                  //l'épaisseur e >= 1 (valeur impaire) du trait. Ici e = 19.
+4                   //nombre k >= 0 de paires de recoloriage fournies ci-dessous, pour recoloriages successifs.
+400,300,G           //première paire, sous la forme x; y; couleur.
+570,250,G           //deuxième paire.
+700,10,R            //etc.
+580,12,G            //dernière paire.
 ```
 ###

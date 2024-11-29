@@ -9,17 +9,17 @@ javac -source 1.7 -target 1.7 -d FatayerjiHalgand/bin FatayerjiHalgand/src/*.jav
 ```
 ### Execution
 
-#### Pour Quad Tree
+#### Pour Quadtree
 ```
 java -classpath FatayerjiHalgand/bin MonBoTablo 1 FatayerjiHalgand/data/input1.txt FatayerjiHalgand/output
 ```
 
-#### Pour Ternary Tree
+#### Pour Ternarytree
 ```
 java -classpath FatayerjiHalgand/bin MonBoTablo 2 FatayerjiHalgand/data/input2.txt FatayerjiHalgand/output
 ```
 
-## Variante Ternary tree
+## Variante Ternarytree
 
 ### Explication de la variante
 
@@ -31,13 +31,55 @@ L'arbre ternaire divise une région rectangulaire en trois sous-régions en util
 2. __Région Nord-Est (NE)__ : Cette région est colorée avec la couleur ```c2```.
 3. __Région Sud-Est (SE)__ : Cette région est colorée avec la couleur ```c3```.
 
-Le processus suit ces étapes :
+### Comment fonctionne l'arbre ternaire pour les divisions ?
 
-- La région contenant le point de division est subdivisée en trois sous-régions.
-- Le point de division lui-même est inclus dans la région NE pour simplifier la logique.
-- Les couleurs sont appliquées selon l'ordre fourni dans le fichier d'entrée.
+Un arbre ternaire représente une région rectangulaire qui peut être divisée en trois sous-régions lorsque nécessaire. Cette division est contrôlée par un point de division ```(dx, dy)``` fourni en entrée. Voici une explication étape par étape de la logique de division.
 
-Ce processus est répété pour chaque point de division, dans l'ordre où ils sont spécifiés. Les couleurs et divisions créent une structure arborescente, où chaque nœud interne a exactement trois enfants.
+1. Etat initial
+- Chaque nœud dans l'arbre ternaire représente une région rectangulaire définie par :
+    - __Point inférieur gauche (```bottomLeft```) :__ ```(x0, y0)```
+    - __Point supérieur gauche (```topRight```) :__ ```(x1, y1)```
+- Si le nœud est une __feuille__ (sans enfants), il représente une région qui peut être divisée.
+- Le __point de division__ ```(dx, dy)``` est l'élément clé qui déclenche la division.
+
+2. Processus de division
+Lorsqu’un nœud feuille est divisé, il divise la région rectangulaire en trois __sous-régions__ :
+    1.  __Région Ouest :__ La partie située à gauche du point de division.
+    2.  __Région Nord-Est :__ La partie située au-dessus et à droite du point de division.
+    3.  __Région Sud-Est :__ La partie située en dessous et à droite du point de division.
+- Chaque sous-région est associée à une couleur (```c1```, ```c2```, ```c3```) fournie en entrée avec le point de division.
+
+3. Définition des sous-régions
+
+Soit :
+- __La région d’origine :__ ```(x0, y0)``` à ```(x1, y1)```
+- __Le point de division :__ ```(dx, dy)```
+- __Les couleurs :__ ```c1```, ```c2```, ```c3```
+
+Les sous-régions sont définies comme suit :
+
+1. Région Ouest:
+- Coordonnées :
+    - Inférieur gauche : ```(x0, y0)```
+    - Supérieur droit :  ```(dx, y1)```
+    - Couleur : ```c1```
+Contient tous les points où ```x <= dx```.
+2. Région Nord-Est:
+- Coordonnées :
+    - Inférieur gauche :``` (dx, dy)```
+    - Supérieur droit : ```(x1, y1)```
+    - Couleur : ```c2```
+Contient tous les points où ```x > dx et y >= dy```.
+3. Région Sud-Est:
+- Coordonnées :
+    - Inférieur gauche :``` (dx, y0)```
+    - Supérieur droit : ```(x1, dy)```
+    - Couleur : ```c3```
+Contient tous les points où ```x > dx et y < dy```.
+
+4. Règles de division
+- Un nœud est __remplacé par trois enfants__, chacun représentant une des trois sous-régions.
+- Le point de division ```(dx, dy)``` doit se situer strictement à l’intérieur de la région (pas sur une bordure). Si le point de division est invalide (par exemple, en dehors de la région), la division est ignorée.
 
 ### Format du fichier d'entrée pour la variante 2
 
@@ -68,4 +110,3 @@ Où :
 700,10,R            //etc.
 580,12,G            //dernière paire.
 ```
-###

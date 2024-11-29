@@ -110,7 +110,7 @@ public class Quadtree extends Tree {
     protected void dessiner(Image img, int imageSize, int thickness) {
         if (this.estFeuille()) {
             // Leaf node: Fill its region with its color.
-
+            
             // Map quadtree coordinates to image coordinates
             int xStart = Math.max(0, this.bottomLeft.getX());
             int xEnd = Math.min(imageSize, this.topRight.getX());
@@ -118,7 +118,7 @@ public class Quadtree extends Tree {
             int yEndImg = Math.min(imageSize, imageSize - this.bottomLeft.getY());
 
             if (xStart >= xEnd || yStartImg >= yEndImg) {
-                // Invalid rectangle, skip drawing
+                // Invalid rectangle
                 return;
             }
 
@@ -128,12 +128,11 @@ public class Quadtree extends Tree {
 
             // Do not draw any borders
         } else {
-            // First, recursively draw the children
             for (Tree child : children) {
                 child.dessiner(img, imageSize, thickness);
             }
 
-            // Now, draw the division lines at the division point
+            // draw the division lines at the division point
             if (this.divisionPoint != null) {
                 int xDiv = this.divisionPoint.getX();
                 int yDiv = this.divisionPoint.getY();
@@ -142,7 +141,6 @@ public class Quadtree extends Tree {
                 int xDivImg = xDiv;
                 int yDivImg = imageSize - yDiv;
 
-                // Calculate half of the thickness
                 int halfThickness = thickness / 2;
 
                 Color lineColor = Color.BLACK;

@@ -5,8 +5,8 @@ public abstract class Tree {
     protected Point bottomLeft;   // Bottom-left corner of the region
     protected Point topRight;     // Top-right corner of the region
     protected Point divisionPoint; // Division point for internal nodes
-    protected char color;         // Color of the region (only for leaf nodes)
-    protected Tree[] children;    // Children nodes (array size depends on subclass)
+    protected char color;         // Color of the region 
+    protected Tree[] children;    // Children nodes 
 
     // Getters
     public Point getBottomLeft() {
@@ -67,13 +67,11 @@ public abstract class Tree {
 
     //  O(n), où n est le nombre de feuilles.
     public void toImage(String filename, int imageSize, int thickness) throws IOException {
-        // Create an image
+        
         Image img = new Image(imageSize, imageSize);
 
-        // Start drawing from the root node
         this.dessiner(img, imageSize, thickness);
 
-        // Save the image to a file
         img.save(filename);
     }
 
@@ -96,7 +94,6 @@ public abstract class Tree {
     public void reColor(int x, int y, char newColor) {
         Tree region = this.searchQTree(x, y);
         if (region != null && region.estFeuille()) {
-            // Apply recoloring
             region.setColor(newColor);
         }
     }
@@ -104,7 +101,6 @@ public abstract class Tree {
     //  O(n) pour vérifier et compresser les feuilles.
     public void compressQTree() {
         if (!this.estFeuille() && this.children != null) {
-            // Recursively compress children
             for (Tree child : children) {
                 child.compressQTree();
             }

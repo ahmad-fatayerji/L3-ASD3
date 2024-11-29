@@ -6,12 +6,12 @@ import java.io.IOException;
 
 public class TreeProcessor {
 
-    private Tree tree; // Now supports both Quadtree and Ternarytree
+    private Tree tree; 
     private int imageSize;
     private int thickness;
     private String outputDirectory;
-    private Point[] divisionPoints; // Array of division points
-    private RecoloringInstruction[] recoloringPairs; // Array of recoloring instructions
+    private Point[] divisionPoints; 
+    private RecoloringInstruction[] recoloringPairs; 
 
     public TreeProcessor(String inputFilePath, String outputDirectory, int variant) throws IOException {
         this.outputDirectory = outputDirectory;
@@ -138,7 +138,7 @@ public class TreeProcessor {
             dir.mkdirs();
         }
     
-        // Build the quadtree
+        // build the quadtree
         tree.buildQTree(divisionPoints);
     
         // Generate the base outputs

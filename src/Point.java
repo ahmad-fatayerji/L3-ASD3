@@ -33,7 +33,7 @@ public class Point {
     }
 
     // Getters
-    // O(1) pour tous ici
+    // O(1) pour tout ici
     public int getX() { return x; }
     public int getY() { return y; }
     public char getC1() { return c1; }

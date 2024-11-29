@@ -43,21 +43,21 @@ public class Ternarytree extends Tree {
         int dx = divisionPoint.getX();
         int dy = divisionPoint.getY();
 
-        // West (W) Region: x0 <= x <= dx, y0 <= y <= y1
+        // West Region: x0 <= x <= dx, y0 <= y <= y1
         children[0] = new Ternarytree(
             this.bottomLeft,
             new Point(dx, this.topRight.getY()),
             divisionPoint.getC1()
         );
 
-        // Northeast (NE) Region: dx <= x <= x1, dy <= y <= y1
+        // Northeast region: dx <= x <= x1, dy <= y <= y1
         children[1] = new Ternarytree(
             new Point(dx, dy),
             this.topRight,
             divisionPoint.getC2()
         );
 
-        // Southeast (SE) Region: dx <= x <= x1, y0 <= y <= dy
+        // Southeast Region: dx <= x <= x1, y0 <= y <= dy
         children[2] = new Ternarytree(
             new Point(dx, this.bottomLeft.getY()),
             new Point(this.topRight.getX(), dy),
@@ -80,13 +80,13 @@ public class Ternarytree extends Tree {
         int dy = this.divisionPoint.getY();
 
         if (x <= dx) {
-            // West (W) region
+            // West region
             return children[0].searchQTree(x, y);
         } else if (y >= dy) {
-            // Northeast (NE) region
+            // Northeast region
             return children[1].searchQTree(x, y);
         } else {
-            // Southeast (SE) region
+            // Southeast  region
             return children[2].searchQTree(x, y);
         }
     }
@@ -105,7 +105,7 @@ public class Ternarytree extends Tree {
             int yEndImg = Math.min(imageSize, imageSize - this.bottomLeft.getY());
 
             if (xStart >= xEnd || yStartImg >= yEndImg) {
-                // Invalid rectangle, skip drawing
+                // Invalid rectangle
                 return;
             }
 
@@ -115,12 +115,11 @@ public class Ternarytree extends Tree {
 
             // Do not draw any borders
         } else {
-            // First, recursively draw the children
             for (Tree child : children) {
                 child.dessiner(img, imageSize, thickness);
             }
 
-            // Now, draw the division lines at the division point
+            // draw the division lines at the division point
             if (this.divisionPoint != null) {
                 int dx = this.divisionPoint.getX();
                 int dy = this.divisionPoint.getY();
@@ -129,7 +128,6 @@ public class Ternarytree extends Tree {
                 int xDivImg = dx;
                 int yDivImg = imageSize - dy;
 
-                // Calculate half of the thickness
                 int halfThickness = thickness / 2;
 
                 Color lineColor = Color.BLACK;

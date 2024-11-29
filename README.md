@@ -66,13 +66,13 @@ Les sous-régions sont définies comme suit :
 Contient tous les points où ```x <= dx```.
 2. Région Nord-Est:
 - Coordonnées :
-    - Inférieur gauche :``` (dx, dy)```
+    - Inférieur gauche :```(dx, dy)```
     - Supérieur droit : ```(x1, y1)```
     - Couleur : ```c2```
 Contient tous les points où ```x > dx et y >= dy```.
 3. Région Sud-Est:
 - Coordonnées :
-    - Inférieur gauche :``` (dx, y0)```
+    - Inférieur gauche :```(dx, y0)```
     - Supérieur droit : ```(x1, dy)```
     - Couleur : ```c3```
 Contient tous les points où ```x > dx et y < dy```.

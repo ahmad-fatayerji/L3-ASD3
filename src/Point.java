@@ -14,6 +14,14 @@ public class Point {
         this.c4 = c4;
     }
 
+    public Point(int x, int y, char c1, char c2, char c3) {
+        this.x = x;
+        this.y = y;
+        this.c1 = c1;
+        this.c2 = c2;
+        this.c3 = c3;
+    }
+
     public Point(int x, int y) {
         this.x = x;
         this.y = y;
